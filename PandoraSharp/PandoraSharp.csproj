@@ -60,17 +60,21 @@
     <Compile Include="Config\PandoraSharpConfig.cs" />
     <Compile Include="Exceptions\PandoraRequestURLFormatException.cs" />
     <Compile Include="Exceptions\PandoraResponseException.cs" />
+    <Compile Include="Requests\PandoraGetPlaylistRequest.cs" />
     <Compile Include="Requests\PandoraSearchStationRequest.cs" />
     <Compile Include="Requests\PandoraStationListRequest.cs" />
     <Compile Include="Requests\PandoraUserAuthRequest.cs" />
     <Compile Include="Responses\Errors.cs" />
+    <Compile Include="Responses\PandoraGetPlaylistResult.cs" />
     <Compile Include="Responses\PandoraPartnerAuthResult.cs" />
     <Compile Include="Responses\PandoraResponse.cs" />
     <Compile Include="Requests\PandoraRequest.cs" />
-    <Compile Include="Responses\PandoraResponseResult.cs" />
+    <Compile Include="Responses\IPandoraResponseResult.cs" />
     <Compile Include="Responses\PandoraSearchStationResult.cs" />
     <Compile Include="Responses\PandoraStationListResult.cs" />
     <Compile Include="Responses\PandoraUserAuthResult.cs" />
+    <Compile Include="Structures\MusicRetrievalLink.cs" />
+    <Compile Include="Structures\PSong.cs" />
     <Compile Include="Structures\SearchResults\ISearchResult.cs" />
     <Compile Include="Structures\SearchResults\SearchArtistResult.cs" />
     <Compile Include="Structures\SearchResults\SearchGenreResult.cs" />
@@ -80,7 +84,7 @@
     <Compile Include="PandoraConnector.cs" />
     <Compile Include="Requests\PandoraPartnerAuthRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PStation.cs" />
+    <Compile Include="Structures\PStation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

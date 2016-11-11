@@ -53,7 +53,12 @@ namespace PandoraSharp
                 //Get the response
                 WebResponse resp = request.GetResponse();
                 StreamReader reader = new StreamReader(resp.GetResponseStream());
-                PandoraResponse response = JsonConvert.DeserializeObject<PandoraResponse>(reader.ReadToEnd());
+                string rawResponse = reader.ReadToEnd();
+                PandoraResponse response = JsonConvert.DeserializeObject<PandoraResponse>(rawResponse);
+
+                //Debug
+                //Console.WriteLine(url);
+                //Console.WriteLine(rawResponse);
 
                 if (response.stat == "ok")
                 {

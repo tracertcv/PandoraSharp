@@ -88,7 +88,7 @@ namespace PandoraSharp.Requests
         {
             if(partnerAuthToken != null && PartnerID != null)
             {
-                return "method=" + Method + "&auth_token=" + Uri.EscapeUriString(partnerAuthToken) + "&partner_id=" + PartnerID;
+                return "method=" + Method + "&auth_token=" + Uri.EscapeDataString(partnerAuthToken) + "&partner_id=" + PartnerID;
             }
             throw new PandoraRequestURLFormatException();
         }

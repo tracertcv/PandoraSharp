@@ -12,6 +12,8 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Encoders;
+using PandoraSharp.Structures.SearchResults;
+using PandoraSharp.Structures;
 
 namespace PandoraSharp
 {
@@ -34,7 +36,8 @@ namespace PandoraSharp
 
         //Station tracking collections
         public PStation CurrentStation { get; set; }
-        public List<PStation> StationList { get; set; }         
+        public List<PStation> StationList { get; set; } 
+        public List<ISearchResult> SearchResults { get; set; }     
 
         //Pandora auth data.  All values need to be calculated from responses.
         private string  PartnerID;
@@ -50,8 +53,6 @@ namespace PandoraSharp
             this.PBlowfish = new PandoraBlowfish(ClientConfig.EncryptKey, ClientConfig.DecryptKey);
             this.PConnector = new PandoraConnector(BaseConfig.ConnectorConfig, this.PBlowfish);            
         }
-
-        
 
         //Send a partner auth request to Pandora.  This will get us our sync time, partner ID, and partner auth token, which we need for any further requests.
         public bool doPartnerAuth()
@@ -105,8 +106,9 @@ namespace PandoraSharp
             return responseOK;
         }
 
-        //The following methods require a valid user ID and auth token.
-        public bool doGetStationList()
+        //The following methods require a valid user ID and auth token. 
+        //Returns a list of stations currently available to the authed user.
+        public List<PStation> doGetStationList()
         {
             bool responseOK = false;
             PandoraStationListRequest stationRequest = new PandoraStationListRequest();
@@ -124,8 +126,56 @@ namespace PandoraSharp
                 PandoraStationListResult stationResult = stationResponse.result;
                 this.StationList = stationResult.stations;
             }
-            return responseOK;
+            return this.StationList;
         }
+
+        //Methods for controlling station list.
+        //Returns a list of search results.  Pandora returns three different types - artist, song, and genre.  This method aggregates these and returns the full list.
+        public List<ISearchResult> doSearchStations(string searchString)
+        {
+            bool responseOK = false;
+            PandoraSearchStationRequest stationRequest = new PandoraSearchStationRequest();
+            PandoraResponse stationResponse;
+            stationRequest.Protocol = ProtocolNoTLS;
+            stationRequest.expectedResponseType = typeof(PandoraSearchStationResult);
+            stationRequest.UserID = this.UserID;
+            stationRequest.PartnerID = this.PartnerID;
+            stationRequest.userAuthToken = this.UserAuthToken;
+            stationRequest.syncTime = computeSyncTime();
+            stationRequest.searchText = searchString;
+            stationResponse = PConnector.doPost(stationRequest);
+            responseOK = validateResponse(stationResponse);
+            if (responseOK)
+            {
+                PandoraSearchStationResult stationResult = stationResponse.result;
+                this.SearchResults = stationResult.AggregateResults;
+            }
+            return this.SearchResults;
+        }
+
+        //Returns a list of song objects representing a station's playlist.
+        public List<PSong> doGetStationPlaylist(PStation station)
+        {
+            bool responseOK = false;
+            PandoraGetPlaylistRequest playlistRequest = new PandoraGetPlaylistRequest();
+            PandoraResponse playlistResponse;
+            playlistRequest.Protocol = ProtocolTLS;
+            playlistRequest.expectedResponseType = typeof(PandoraGetPlaylistResult);
+            playlistRequest.UserID = this.UserID;
+            playlistRequest.PartnerID = this.PartnerID;
+            playlistRequest.userAuthToken = this.UserAuthToken;
+            playlistRequest.syncTime = computeSyncTime();
+            playlistRequest.stationToken = station.stationToken;
+            playlistResponse = PConnector.doPost(playlistRequest);
+            responseOK = validateResponse(playlistResponse);
+            if (responseOK)
+            {
+                PandoraGetPlaylistResult playlistResult = playlistResponse.result;
+                return playlistResult.items;
+            }
+            return new List<PSong>();
+        }
+
 
         /*
          * Some handy methods
@@ -134,6 +184,12 @@ namespace PandoraSharp
         public bool isPartnerAuthed()
         {
             return (PartnerID != null && PartnerAuthToken != null); //If we don't have both of these we aren't authed.
+        }
+
+        //Returns true if we are user authed, false if not.
+        public bool isUserAuthed()
+        {
+            return (UserID != null && UserAuthToken != null);
         }
 
         /*
@@ -169,7 +225,7 @@ namespace PandoraSharp
         internal long now()
         {
             TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
-            long seconds = (long)t.TotalSeconds;
+            long seconds = (long)t.TotalSeconds; //Don't need milliseconds to calculate sync time.
             return seconds;
         }
 
@@ -189,7 +245,8 @@ namespace PandoraSharp
                 else
                 {
                     //Response is not valid.
-                    log(String.Format("Error validating response. Code: {0}, message: {1}, description: {2]", response.code, response.message, Errors.getDescription(response.code)));
+                    log(String.Format("Error occurred while making request: {0}", Errors.getDescription(response.code)));
+                    //log(String.Format("Error validating response. Code: {0}, message: {1}, description: {2]", response.code, response.message, Errors.getDescription(response.code)));
                 }
             }
             else
