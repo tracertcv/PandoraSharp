@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PandoraSharp.Requests
 {
-    class Methods
+    static class Methods
     {
         public const string AccessoryConnect = "accessory.accessoryConnect";
         public const string AdGetAdMetadata = "ad.getAdMetadata";

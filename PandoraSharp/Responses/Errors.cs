@@ -49,7 +49,7 @@ namespace PandoraSharp.Responses
             {1025, "BIRTH_YEAR_INVALID"},
             {1026, "BIRTH_YEAR_TOO_YOUNG"},
             {1027, "INVALID_COUNTRY_CODE"},
-            {1027, "INVALID_GENDER"},
+            {1028, "INVALID_GENDER"},
             {1034, "DEVICE_DISABLED"},
             {1035, "DAILY_TRIAL_LIMIT_REACHED"},
             {1036, "INVALID_SPONSOR"},

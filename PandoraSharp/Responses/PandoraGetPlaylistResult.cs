@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace PandoraSharp.Responses
 {
-    class PandoraStationListResult : IPandoraResponseResult
+    class PandoraGetPlaylistResult : IPandoraResponseResult
     {
-        public List<PStation> stations { get; set; }
-        public string checksum { get; set; }
+        public List<PSong> items { get; set; }
 
         public void populate(string data)
         {

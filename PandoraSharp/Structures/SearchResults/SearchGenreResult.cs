@@ -11,5 +11,14 @@ namespace PandoraSharp.Structures.SearchResults
         public string musicToken { get; set; }
         public int score { get; set; }
         public string stationName { get; set; }
+
+        public string getType()
+        {
+            return "Genre";
+        }
+        public string getName()
+        {
+            return stationName;
+        }
     }
 }

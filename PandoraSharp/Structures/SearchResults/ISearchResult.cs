@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace PandoraSharp.Structures.SearchResults
 {
-    interface ISearchResult
+    public interface ISearchResult
     {
         string musicToken { get; set; }
         int score { get; set; }
+        string getType();
+        string getName();
     }
 }
