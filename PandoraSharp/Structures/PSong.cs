@@ -54,9 +54,12 @@ namespace PandoraSharp.Structures
             return adToken == null;
         }
 
+        public string FileName { get; set; }
+
         public FileStream getMP3(string quality)
         {
-            string fileName = "tmp." + this.songName + ".mp4";
+            string fileName = "tmp." + this.songName + ".mp3";
+            FileName = fileName;
             WebClient myClient = new WebClient();
             myClient.DownloadFile(audioUrlMap[quality].audioUrl, fileName);
             return new FileStream(fileName, FileMode.Open);
