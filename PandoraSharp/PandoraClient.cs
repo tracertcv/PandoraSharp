@@ -14,6 +14,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Encoders;
 using PandoraSharp.Structures.SearchResults;
 using PandoraSharp.Structures;
+using PandoraSharp.Exceptions;
 
 namespace PandoraSharp
 {
@@ -151,6 +152,32 @@ namespace PandoraSharp
                 this.SearchResults = stationResult.AggregateResults;
             }
             return this.SearchResults;
+        }
+
+        //Adds a search result to the station list. Returns the new station.
+        public PStation doAddStation(ISearchResult search)
+        {
+            bool responseOK = false;
+            PandoraStationAddRequest addRequest = new PandoraStationAddRequest();
+            PandoraResponse addResponse;
+            addRequest.Protocol = ProtocolTLS;
+            addRequest.expectedResponseType = typeof(PandoraStationAddResult);
+            addRequest.UserID = this.UserID;
+            addRequest.PartnerID = this.PartnerID;
+            addRequest.userAuthToken = this.UserAuthToken;
+            addRequest.syncTime = computeSyncTime();
+            addRequest.musicType = (search.getType().Equals("Artist")?"artist":"song");
+            addRequest.musicToken = search.musicToken;
+            addResponse = PConnector.doPost(addRequest);
+            responseOK = validateResponse(addResponse);
+            if (responseOK)
+            {
+                PandoraStationAddResult addResult = addResponse.result;
+                return addResult.station;
+            } else
+            {
+                throw new PandoraResponseExecption();
+            }
         }
 
         //Returns a list of song objects representing a station's playlist.

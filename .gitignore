@@ -1,0 +1,6 @@
+.vs
+packages
+PandoraSharp/bin
+PandoraSharp/obj
+PandoraSharp/config.json
+PandoraSharp/Test.cs

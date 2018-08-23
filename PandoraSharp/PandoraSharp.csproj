@@ -33,6 +33,15 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -62,6 +71,7 @@
     <Compile Include="Exceptions\PandoraResponseException.cs" />
     <Compile Include="Requests\PandoraGetPlaylistRequest.cs" />
     <Compile Include="Requests\PandoraSearchStationRequest.cs" />
+    <Compile Include="Requests\PandoraStationAddRequest.cs" />
     <Compile Include="Requests\PandoraStationListRequest.cs" />
     <Compile Include="Requests\PandoraUserAuthRequest.cs" />
     <Compile Include="Responses\Errors.cs" />
@@ -71,6 +81,7 @@
     <Compile Include="Requests\PandoraRequest.cs" />
     <Compile Include="Responses\IPandoraResponseResult.cs" />
     <Compile Include="Responses\PandoraSearchStationResult.cs" />
+    <Compile Include="Responses\PandoraStationAddResult.cs" />
     <Compile Include="Responses\PandoraStationListResult.cs" />
     <Compile Include="Responses\PandoraUserAuthResult.cs" />
     <Compile Include="Structures\MusicRetrievalLink.cs" />
